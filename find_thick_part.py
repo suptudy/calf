@@ -120,9 +120,8 @@ def find_thick_part(f, res1, thick_resultR, thick_resultL):
           'left_thick_width' : [final_wl[i]]
       }
       left_df = pd.DataFrame(left_data)
+      print("left:", left_df)
       thick_resultL = pd.concat([thick_resultL, left_df])
 
-    # 최종 이미지 (선그어져있는)
-    plt.savefig('result.png')
-    
+
     return thick_resultR, thick_resultL

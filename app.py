@@ -45,43 +45,46 @@ for uploaded_file in uploaded_files:
 # read board pixel front 
 df = pd.read_csv('./board_pixel - front.csv') 
 
-# dst is resize as board
-resize_img, dst, point = image_function.resize(np.array(remove_image_list[0]), df) 
+# 이미지가 들어오면 진행 
+if remove_image_list:
+    # dst is resize as board
+    resize_img, dst, point = image_function.resize(np.array(remove_image_list[0]), df) 
 
-# contour_image(numpy.ndarray)
-contour_img = image_function.leg_contour(dst)
+    # contour_image(numpy.ndarray)
+    contour_img = image_function.leg_contour(dst)
+    print(contour_img.shape)
+    # make_thick_csv
+    thick_resultR, thick_resultL = image_function.make_thick_csv()
 
-# make_thick_csv
-thick_resultR, thick_resultL = image_function.make_thick_csv()
-
-# find thick part
-thick_resultR, thick_resultL = thick.find_thick_part(uploaded_file.name, contour_img, thick_resultR, thick_resultL)
-st.dataframe(thick_resultR)
-st.dataframe(thick_resultL)
+    # find thick part
+    final_img = 'test.jpg'
+    thick_resultR, thick_resultL = thick.find_thick_part(uploaded_file.name, contour_img, thick_resultR, thick_resultL)
+    st.dataframe(thick_resultR) # 확인용
+    st.dataframe(thick_resultL) # 확인용 
 
 
-# 정렬하여 표시
-with col1:
-    st.subheader("Front Leg")
-    st.caption("Original Front Leg")
-    st.image(real_image_list[0])
-    st.caption("Remove Background Front Leg")
-    st.image(remove_image_list[0])
-    st.caption("Resize Front Leg")
-    st.image(dst)
-    st.caption("Contour Front Leg")
-    st.image(contour_img)
-        
-with col2:
-    st.subheader("Right Leg")
-    st.caption("Original Right Leg")
-    st.image(real_image_list[1])
-    st.caption("Remove Background Front Leg")
-    st.image(remove_image_list[1])
+    # 정렬하여 표시
+    with col1:
+        st.subheader("Front Leg")
+        st.caption("Original Front Leg")
+        st.image(real_image_list[0])
+        st.caption("Remove Background Front Leg")
+        st.image(remove_image_list[0])
+        st.caption("Resize Front Leg")
+        st.image(dst)
+        st.caption("Contour Front Leg")
+        st.image(contour_img)
+            
+    with col2:
+        st.subheader("Right Leg")
+        st.caption("Original Right Leg")
+        st.image(real_image_list[1])
+        st.caption("Remove Background Front Leg")
+        st.image(remove_image_list[1])
 
-with col3:
-    st.subheader("Left Leg")
-    st.caption("Original Left Leg")
-    st.image(real_image_list[2])
-    st.caption("Remove Background Front Leg")
-    st.image(remove_image_list[2])
+    with col3:
+        st.subheader("Left Leg")
+        st.caption("Original Left Leg")
+        st.image(real_image_list[2])
+        st.caption("Remove Background Front Leg")
+        st.image(remove_image_list[2])
