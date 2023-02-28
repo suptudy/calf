@@ -2,6 +2,8 @@ streamlit
 numpy
 pandas
 opencv-python-headless
-from PIL import image
+matplotlib
 time
+os
 from rembg import remove
+Image
