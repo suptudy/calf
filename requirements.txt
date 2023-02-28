@@ -1,0 +1,11 @@
+pip install --upgrade pip
+
+streamlit
+numpy
+pandas
+opencv-python-headless
+matplotlib
+time
+os
+rembg
+PIL
