@@ -5,5 +5,5 @@ opencv-python-headless
 matplotlib
 time
 os
-from rembg import remove
-Image
+rembg
+PIL
