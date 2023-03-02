@@ -65,7 +65,7 @@ if remove_image_list:
     st.dataframe(thick_result_merge.iloc[0]) # 확인용 (결과 한줄만 필요)
 
     # 모든 데이터프레임을 합쳐서 저장할 것 필요 
-    # 추가해야함
+    thick_final_result = image_function.make_final_csv()
     
 # -----------------------------------------------------------------------
 # 정렬하여 표시
