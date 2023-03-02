@@ -1,6 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import streamlit as st
+from PIL import Image
+
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
 def find_thick_part(f, res1, thick_resultR, thick_resultL):
   # 값들이 오름차순으로 들어감
@@ -9,9 +13,9 @@ def find_thick_part(f, res1, thick_resultR, thick_resultL):
 
   height_pos_left = []
   width_pos_left = []
-
+  
   # right leg
-  for i in range(300): #height
+  for i in range(250): #height
     for j in range(240): #width
       if res1[i, j]!=0: # 종아리 경계선 
         if i>=10:
@@ -20,7 +24,7 @@ def find_thick_part(f, res1, thick_resultR, thick_resultL):
           width_pos_right.append(j)
 
   # left leg
-  for i in range(300): #height
+  for i in range(250): #height
     for j in range(240, 490): #width
       if res1[i, j]!=0: # 종아리 경계선 
         if i>=10:
@@ -90,6 +94,22 @@ def find_thick_part(f, res1, thick_resultR, thick_resultL):
   # max width 값을 구성하는 height, min_width, max_width 확인하고 그리기 
   # --------------------------------------
   
+   # left
+  for i in range(len(final_wl)):
+    if final_wl[i] == max(final_wl):
+      plt.hlines(final_hl[i], min_wl[i], max_wl[i], color='yellow', linestyle='--', linewidth=1)
+
+      # dataframe화 (왼 다리)
+      left_data = {
+          'id' : [f[:3]],
+          'left_height' : [final_hl[i]],
+          'left_min_width' : [min_wl[i]],
+          'left_max_width' : [max_wl[i]],
+          'left_thick_width' : [final_wl[i]]
+      }
+      left_df = pd.DataFrame(left_data)
+      thick_resultL = pd.concat([thick_resultL, left_df])
+      
   # right 
   for i in range(len(final_wr)):
     if final_wr[i] == max(final_wr):
@@ -106,22 +126,11 @@ def find_thick_part(f, res1, thick_resultR, thick_resultL):
       right_df = pd.DataFrame(right_data)
       thick_resultR = pd.concat([thick_resultR, right_df])
 
-  # left
-  for i in range(len(final_wl)):
-    if final_wl[i] == max(final_wl):
-      plt.hlines(final_hl[i], min_wl[i], max_wl[i], color='yellow', linestyle='--', linewidth=1)
-
-      # dataframe화 (왼 다리)
-      left_data = {
-          'id' : [f[:3]],
-          'left_height' : [final_hl[i]],
-          'left_min_width' : [min_wl[i]],
-          'left_max_width' : [max_wl[i]],
-          'left_thick_width' : [final_wl[i]]
-      }
-      left_df = pd.DataFrame(left_data)
-      print("left:", left_df)
-      thick_resultL = pd.concat([thick_resultL, left_df])
-
-
-    return thick_resultR, thick_resultL
+  # plt image save test
+  final_path = '/home/ksbds44/workspace/calf/final_img/' + f
+  plt.imshow(res1)
+  plt.savefig(final_path)
+  
+  # print final image   
+  st.image(final_path)
+  return thick_resultR, thick_resultL

@@ -32,7 +32,7 @@ def resize(img, df):
 def leg_contour(dst):
   temp = cv2.fastNlMeansDenoisingColored(dst,None,15, 15, 5, 9) # 털(잡음) 제거
   res1 = cv2.Canny(temp, 10, 120)
-
+  
   return res1
 
 def make_thick_csv():

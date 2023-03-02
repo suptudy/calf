@@ -52,39 +52,44 @@ if remove_image_list:
 
     # contour_image(numpy.ndarray)
     contour_img = image_function.leg_contour(dst)
-    print(contour_img.shape)
+    temp_path = '/home/ksbds44/workspace/calf/temp_img/' + uploaded_file.name
+    cv2.imwrite(temp_path, contour_img) # test image 
+
     # make_thick_csv
     thick_resultR, thick_resultL = image_function.make_thick_csv()
 
     # find thick part
-    final_img = 'test.jpg'
     thick_resultR, thick_resultL = thick.find_thick_part(uploaded_file.name, contour_img, thick_resultR, thick_resultL)
-    st.dataframe(thick_resultR) # 확인용
-    st.dataframe(thick_resultL) # 확인용 
+    thick_result_merge = pd.merge(thick_resultR, thick_resultL)
+    # print final dataframe
+    st.dataframe(thick_result_merge.iloc[0]) # 확인용 (결과 한줄만 필요)
 
-
-    # 정렬하여 표시
-    with col1:
-        st.subheader("Front Leg")
-        st.caption("Original Front Leg")
-        st.image(real_image_list[0])
-        st.caption("Remove Background Front Leg")
-        st.image(remove_image_list[0])
-        st.caption("Resize Front Leg")
-        st.image(dst)
-        st.caption("Contour Front Leg")
-        st.image(contour_img)
+    # 모든 데이터프레임을 합쳐서 저장할 것 필요 
+    # 추가해야함
+    
+# -----------------------------------------------------------------------
+# 정렬하여 표시
+with col1:
+    st.subheader("Front Leg")
+    st.caption("Original Front Leg")
+    st.image(real_image_list[0])
+    st.caption("Remove Background Front Leg")
+    st.image(remove_image_list[0])
+    st.caption("Resize Front Leg")
+    st.image(dst)
+    st.caption("Contour Front Leg")
+    st.image(contour_img)
             
-    with col2:
-        st.subheader("Right Leg")
-        st.caption("Original Right Leg")
-        st.image(real_image_list[1])
-        st.caption("Remove Background Front Leg")
-        st.image(remove_image_list[1])
+with col2:
+    st.subheader("Right Leg")
+    st.caption("Original Right Leg")
+    st.image(real_image_list[1])
+    st.caption("Remove Background Front Leg")
+    st.image(remove_image_list[1])
 
-    with col3:
-        st.subheader("Left Leg")
-        st.caption("Original Left Leg")
-        st.image(real_image_list[2])
-        st.caption("Remove Background Front Leg")
-        st.image(remove_image_list[2])
+with col3:
+    st.subheader("Left Leg")
+    st.caption("Original Left Leg")
+    st.image(real_image_list[2])
+    st.caption("Remove Background Front Leg")
+    st.image(remove_image_list[2])
