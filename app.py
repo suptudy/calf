@@ -135,6 +135,7 @@ if choose == "Leg Image Processing":
         thick_final_result = thick_final_result.append(new_row_left, ignore_index=True)
         thick_final_result = thick_final_result.append(new_row_right, ignore_index=True)
         
+        st.subheader("Final result") 
         st.dataframe(thick_final_result) # model에 들어갈 최종 데이터프레임
 
     # -----------------------------------------------------------------------

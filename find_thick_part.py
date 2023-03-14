@@ -133,7 +133,6 @@ def find_thick_part_front(f, res1, thick_resultR, thick_resultL):
   plt.figure()
   
   # print final image 
-  st.subheader("Final result")  
   st.image(final_path)
   return thick_resultR, thick_resultL
 
@@ -210,6 +209,5 @@ def find_thick_part_side(f, res1, thick_resultR): # 옆면 추출에 대한 수�
 
   
   # print final image 
-  st.subheader("Final result")  
   st.image(final_path)
   return thick_resultR
