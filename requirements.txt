@@ -1,4 +1,9 @@
 streamlit
+option_menu
+image
+cv2
+image_function
+find_thick_part
 numpy
 pandas
 opencv-python-headless
