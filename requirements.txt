@@ -12,3 +12,4 @@ time
 os
 rembg
 PIL
+pyheif

@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 import time
 from rembg import remove # pip install rembg
+import pyheif
 
 import image_function # resize, contour
 import find_thick_part as thick
@@ -24,8 +25,8 @@ st.set_page_config(
 
 # sidebar
 with st.sidebar:
-    choose = option_menu("Calf Program", ["Board Pixel CSV file", "Leg Image Processing", "Regression Model", "Guide"],
-                         icons=['border','person-circle', 'cpu', 'paperclip'],
+    choose = option_menu("Calf Program", ["Guide","Board Pixel CSV file", "Leg Image Processing", "Estimate Calf Round"],
+                         icons=['paperclip','border','person-circle', 'cpu'],
                          menu_icon="app-indicator", default_index=0,
                          styles={
         "container": {"padding": "5!important", "background-color": "#fafafa"},
@@ -35,29 +36,55 @@ with st.sidebar:
     }
     )
 
-# global variable
-test = 0
+# global variable : regression model page에서 확인할 수 있도록 ??
+
 
 # Board Pixel CSV file
 if choose == "Board Pixel CSV file":
     st.title('Board Pixel CSV file') 
-    
-    uploaded_csv = st.file_uploader("Choose CSV file : ", accept_multiple_files=True)
-    if uploaded_csv :
-        df = pd.read_csv(uploaded_csv)
-    else :
-        st.caption('csv file sample')
-        df = pd.read_csv('board_pixel - front.csv')
-    st.dataframe(df)
-    
-    # image_function.pixel_xy('temp_img/001_f.jpg')
+    with st.container():
+        st.subheader("앞면에 대한 board pixel csv file")
+        uploaded_csv = st.file_uploader("Choose CSV file", key="1")
+        if uploaded_csv :
+            df = pd.read_csv(uploaded_csv)
+            st.write(df)
+            # df.to_csv('board_pixel - front.csv', index=False) # 일부러 막아놓음
+        else :
+            st.write('sample csv file')
+            df = pd.read_csv('board_pixel - front.csv')
+            st.dataframe(df)
+            
+    with st.container():
+        st.subheader("**오른쪽 다리 옆면에 대한 board pixel csv file**")
+        uploaded_csv = st.file_uploader("Choose CSV file", key="2")
+        if uploaded_csv :
+            df = pd.read_csv(uploaded_csv)
+            st.write(df)
+            # df.to_csv('board_pixel - rightside.csv', index=False) # 일부러 막아놓음
+        else :
+            st.write('sample csv file')
+            df = pd.read_csv('board_pixel - leftside.csv')
+            st.dataframe(df)
 
+    with st.container():
+        st.subheader("**왼쪽 다리 옆면에 대한 board pixel csv file**")
+        uploaded_csv = st.file_uploader("Choose CSV file", key="3")
+        if uploaded_csv :
+            df = pd.read_csv(uploaded_csv)
+            st.write(df)
+            # df.to_csv('board_pixel - rightside.csv', index=False) # 일부러 막아놓음
+        else :
+            st.write('sample csv file')
+            df = pd.read_csv('board_pixel - leftside.csv')
+            st.dataframe(df)
+
+        
 # Leg Image Processing
 if choose == "Leg Image Processing":
     st.title('Leg Image Processing') 
     st.caption('이미지를 앞면, (피사체 기준) 오른쪽 다리, (피사체 기준) 왼쪽 다리 순으로 넣어주세요.')
 
-    uploaded_files = st.file_uploader("한 명에 대한 다리 이미지를 넣어주세요.", accept_multiple_files=True)
+    uploaded_files = st.file_uploader("한 명에 대한 다리 이미지를 넣어주세요.", type=['png','jpg'], accept_multiple_files=True)
     
     col1, col2, col3 = st.columns(3)
     real_image_list = []
@@ -182,29 +209,61 @@ if choose == "Leg Image Processing":
         with col3:
             st.subheader("Left Leg")
             
-# Leg Image Processing
-if choose == "Regression Model":
-    st.title('Regression Model')
-    st.text('{}' .format(test))
+# Estimate Calf Round
+if choose == "Estimate Calf Round":
+    st.title('Estimate Calf Round')
+    st.markdown(
+    """종아리 왼쪽, 오른쪽에 상관 없이, **mm 단위**로 입력해주세요
+    """
+    )
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.subheader("앞면 width (mm)")
+        frontNum = st.number_input(label='Insert a number', key='1', format='%d', step=1)
+        st.write('The current number is ', frontNum)
+    with col2:
+        st.subheader("옆면 width (mm)")
+        sideNum = st.number_input(label='Insert a number', key='2', format='%d', step=1)
+        st.write('The current number is ', sideNum)
+    
+    st.subheader("RESULT")
+    # model 결과 나올 수 있도록
+    if st.button("결과 확인"):
+        st.write("test")
 
+        
 # Guide
 if choose == "Guide":
     st.title("How to use")
     st.markdown(
     """
-    Streamlit is an open-source app framework built specifically for
-    Machine Learning and Data Science projects.
-    **👈 Select a demo from the sidebar** to see some examples
-    of what Streamlit can do!
-    
     ### 사진 촬영 유의사항
-    - 수평을 맞춰 촬영
+    """
+    )
+    
+    img = Image.open('photoInfo.png') # 고화질로 수정할 것 
+    st.image(img)
+    
+    st.markdown(
+    """
+    - 폼보드에 종아리가 다 들어와야하며, 최대한 옷이 나오지 않아야 한다.
+    - 옆면 촬영 시, 다른 쪽의 다리가 보이지 않도록 촬영해야 한다. 
     
     ### 필요한 데이터
     - 한 명에 대한 종아리 이미지 **[ 앞면, 옆면(오른쪽), 옆면(왼쪽) ]**
     - 폼보드 각 모서리의 픽셀값
     
+    ### Calf Program 유의사항
+    - 페이지를 이동하면 결과가 사라집니다 (ex. Leg Image Processing 페이지에서 Regression Model 페이지로 넘어갔다가 다시 돌아가면 초기 상태로 돌아갑니다.)
     
+    ### Board Pixel CSV file
+    
+    ### Leg Image Processing
+    
+    ### Estimate Calf Round
+    
+    ##### ________________________________________________
     ##### [Image Processing and Intelligent Systems Laboratory](https://www.ipis.cau.ac.kr/%ED%99%88)
     (Chung-Ang University, Seoul 06974, Korea)
     - Su Bin Kwon
@@ -212,5 +271,6 @@ if choose == "Guide":
     - Seung Hee Han
     - Seong Ha Park
     - Joonki Paik
+    ##### ________________________________________________
 """
 )
