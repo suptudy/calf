@@ -37,9 +37,6 @@ with st.sidebar:
     }
     )
 
-# global variable : regression model page에서 확인할 수 있도록 ??
-
-
 # Board Pixel CSV file
 if choose == "Board Pixel CSV file":
     st.title('Board Pixel CSV file') 
@@ -116,7 +113,7 @@ if choose == "Leg Image Processing":
     df_right = pd.read_csv('./board_pixel - leftside.csv') ########################### rightside로 수정해야함
     df_left = pd.read_csv('./board_pixel - leftside.csv') 
     df_list = [df_front, df_right, df_left]
-
+    
     # 이미지가 들어오면 진행 
     if remove_image_list:
         # dst is resize as board
@@ -165,7 +162,8 @@ if choose == "Leg Image Processing":
         
         st.subheader("Final result") 
         st.dataframe(thick_final_result) # model에 들어갈 최종 데이터프레임
-
+        thick_final_result.to_csv('thick_final_result.csv', index=False)
+        
     # -----------------------------------------------------------------------
     # 정렬하여 표시
     # -----------------------------------------------------------------------
@@ -218,38 +216,40 @@ if choose == "Estimate Calf Round":
     """
     )
     no_button = st.button("Leg Image Processing 과정 :x:")
-    yes_button = st.button("Leg Image Processing 과정 :o")
+    yes_button = st.button("Leg Image Processing 과정 :o:")
     
     if no_button:
         with st.container():
-            st.subheader('Leg Image Processing 과정 없이 직접 입력')
-            col1, col2 = st.columns(2)
-            with col1:
-                st.subheader("앞면 width (mm)")
-                frontNum = st.number_input(label='Insert a number', key='1', format='%d', step=1)
-                st.write('The current number is ', frontNum)
-            with col2:
-                st.subheader("옆면 width (mm)")
-                sideNum = st.number_input(label='Insert a number', key='2', format='%d', step=1)
-                st.write('The current number is ', sideNum)
+            st.subheader('(수정필요) Leg Image Processing 과정 없이 직접 입력')
+            
+            st.subheader("앞면 width (mm)")
+            frontNum = st.number_input(label='Insert a number', key='1', format='%d', step=1)
+            st.subheader("옆면 width (mm)")
+            sideNum = st.number_input(label='Insert a number', key='2', format='%d', step=1)
 
-    if yes_button:
+            st.write('The current number is ', frontNum)
+            st.write('The current number is ', sideNum)
+            
+    elif yes_button:
         with st.container():
             st.subheader('Leg Image Processing 진행을 했을 경우')
-            col3, col4 = st.columns(2)
-            with col3:
-                st.subheader("앞면 width (mm)")
-                frontNum = st.number_input(label='Insert a number', key='3', format='%d', step=1)
-                st.write('The current number is ', frontNum)
-            with col4:
-                st.subheader("옆면 width (mm)")
-                sideNum = st.number_input(label='Insert a number', key='4', format='%d', step=1)
-                st.write('The current number is ', sideNum)
             
-    st.subheader("RESULT")
-    # model 결과 나올 수 있도록
-    if st.button("결과 확인"):
-        st.write("test")
+            # thick_final_result 유/무에 따라 
+            if os.path.isfile('thick_final_result.csv'):
+                df = pd.read_csv('thick_final_result.csv')
+                
+                col3, col4 = st.columns(2)
+                with col3:
+                    st.subheader("앞면 width (mm)")
+                    st.write('오른쪽 앞면 width에 대한 값은 ', df['front_thick_width'][0])
+                    st.write('왼쪽 앞면 width에 대한 값은 ', df['front_thick_width'][1])
+                with col4:
+                    st.subheader("옆면 width (mm)")
+                    st.write('오른쪽 옆면 width에 대한 값은 ', df['side_thick_width'][0])
+                    st.write('왼쪽 옆면 width에 대한 값은 ', df['side_thick_width'][1])
+            else :
+                st.write('Leg Image Processing 과정을 거치면 자동으로 입력됩니다.')
+                st.write('Leg Image Processing 과정을 거치거나, **[Leg Image Processing 과정 X]** 을 눌러 직접 입력하세요.')
 
         
 # Guide
@@ -296,3 +296,6 @@ if choose == "Guide":
     ##### ________________________________________________
 """
 )
+    file = 'thick_final_result.csv'
+    if os.path.isfile(file):
+        os.remove(file) 
