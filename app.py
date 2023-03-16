@@ -1,5 +1,6 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
+
 from PIL import Image
 import os
 import cv2
@@ -72,7 +73,7 @@ if choose == "Board Pixel CSV file":
         if uploaded_csv :
             df = pd.read_csv(uploaded_csv)
             st.write(df)
-            # df.to_csv('board_pixel - rightside.csv', index=False) # 일부러 막아놓음
+            # df.to_csv('board_pixel - leftside.csv', index=False) # 일부러 막아놓음
         else :
             st.write('sample csv file')
             df = pd.read_csv('board_pixel - leftside.csv')
@@ -216,17 +217,35 @@ if choose == "Estimate Calf Round":
     """종아리 왼쪽, 오른쪽에 상관 없이, **mm 단위**로 입력해주세요
     """
     )
-    col1, col2 = st.columns(2)
+    no_button = st.button("Leg Image Processing 과정 :x:")
+    yes_button = st.button("Leg Image Processing 과정 :o")
     
-    with col1:
-        st.subheader("앞면 width (mm)")
-        frontNum = st.number_input(label='Insert a number', key='1', format='%d', step=1)
-        st.write('The current number is ', frontNum)
-    with col2:
-        st.subheader("옆면 width (mm)")
-        sideNum = st.number_input(label='Insert a number', key='2', format='%d', step=1)
-        st.write('The current number is ', sideNum)
-    
+    if no_button:
+        with st.container():
+            st.subheader('Leg Image Processing 과정 없이 직접 입력')
+            col1, col2 = st.columns(2)
+            with col1:
+                st.subheader("앞면 width (mm)")
+                frontNum = st.number_input(label='Insert a number', key='1', format='%d', step=1)
+                st.write('The current number is ', frontNum)
+            with col2:
+                st.subheader("옆면 width (mm)")
+                sideNum = st.number_input(label='Insert a number', key='2', format='%d', step=1)
+                st.write('The current number is ', sideNum)
+
+    if yes_button:
+        with st.container():
+            st.subheader('Leg Image Processing 진행을 했을 경우')
+            col3, col4 = st.columns(2)
+            with col3:
+                st.subheader("앞면 width (mm)")
+                frontNum = st.number_input(label='Insert a number', key='3', format='%d', step=1)
+                st.write('The current number is ', frontNum)
+            with col4:
+                st.subheader("옆면 width (mm)")
+                sideNum = st.number_input(label='Insert a number', key='4', format='%d', step=1)
+                st.write('The current number is ', sideNum)
+            
     st.subheader("RESULT")
     # model 결과 나올 수 있도록
     if st.button("결과 확인"):
@@ -235,33 +254,36 @@ if choose == "Estimate Calf Round":
         
 # Guide
 if choose == "Guide":
-    st.title("How to use")
+    st.title("How to use") # 설명에 대한 전체적인 수정이 필요 
     st.markdown(
-    """
-    ### 사진 촬영 유의사항
+    """ 
+    ### :pushpin: 사진 촬영 유의사항
     """
     )
     
     img = Image.open('photoInfo.png') # 고화질로 수정할 것 
-    st.image(img)
+    st.image(img) 
     
     st.markdown(
     """
     - 폼보드에 종아리가 다 들어와야하며, 최대한 옷이 나오지 않아야 한다.
     - 옆면 촬영 시, 다른 쪽의 다리가 보이지 않도록 촬영해야 한다. 
     
-    ### 필요한 데이터
+    ### :pushpin: 필요한 데이터
     - 한 명에 대한 종아리 이미지 **[ 앞면, 옆면(오른쪽), 옆면(왼쪽) ]**
     - 폼보드 각 모서리의 픽셀값
     
-    ### Calf Program 유의사항
+    ### :pushpin: Calf Program 유의사항
     - 페이지를 이동하면 결과가 사라집니다 (ex. Leg Image Processing 페이지에서 Regression Model 페이지로 넘어갔다가 다시 돌아가면 초기 상태로 돌아갑니다.)
     
-    ### Board Pixel CSV file
-    
-    ### Leg Image Processing
-    
-    ### Estimate Calf Round
+    ### :pushpin: Board Pixel CSV file
+    - 폼보드에 보이는 다리만 측정할 수 있도록 폼보드의 모서리 픽셀값이 적혀있는 엑셀 파일이 필요합니다. 
+    ### :pushpin: Leg Image Processing
+    - 이미지에 대한 처리 과정 및 두꺼운 부분에 대한 위치, 길이를 **Final Result**에서 확인할 수 있습니다.
+    ### :pushpin: Estimate Calf Round
+    - 종아리 둘레 예측 결과를 확인하기 위해 필요한 값을 Leg Image Processing에서 확인하여 입력합니다. 
+        - 앞면 width (mm) : front thick width
+        - 옆면 width (mm) : side thick width
     
     ##### ________________________________________________
     ##### [Image Processing and Intelligent Systems Laboratory](https://www.ipis.cau.ac.kr/%ED%99%88)
