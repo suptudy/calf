@@ -267,7 +267,9 @@ if choose == "Estimate Calf Round":
     st.subheader("종아리 둘레 예측 결과")
     check_result = st.button("확인")
     if check_result:
-        st.write('test')
+        loaded_model = joblib.load('lrmodel.pkl')
+        score = loaded_model.score(x,y)
+        st.write('정확도: {score:.3f}'.format(score=score))
         
 # Guide
 if choose == "Guide":
