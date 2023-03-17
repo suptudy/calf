@@ -253,14 +253,18 @@ if choose == "Estimate Calf Round":
 
         st.subheader("종아리 둘레 예측 결과")
         check_result = st.button("확인")
-        if check_result & frontNum!=0 & sideNum!=0:
+        if check_result:
             num=np.array([frontNum,sideNum])
             re_num=num.reshape(1,-1)
             predict_calf=regressor.predict(re_num) 
             calf = int(predict_calf)
-            st.write('둘레는 {} mm 입니다.'.format(calf))
-        elif check_result & (frontNum==0 | sideNum==0) : 
-            st.write("종아리 둘레를 예측하기 위한 값을 넣고 [확인] 버튼을 눌러주세요.")
+            if frontNum == 0 | sideNum == 0:   
+                st.write("종아리 둘레를 예측하기 위한 값을 넣고 [확인] 버튼을 눌러주세요.")
+            else:
+                if calf < 100:
+                    st.write('error')
+                else:
+                    st.write('둘레는 {} mm 입니다.'.format(calf))
             
     st.markdown("""---""")
     st.subheader('Leg Image Processing 진행을 했을 경우')
