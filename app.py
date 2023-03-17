@@ -227,7 +227,7 @@ if choose == "Estimate Calf Round":
     """
     )
     
-    if not os.path.isfile('thick_final_result1.csv'):
+    if not os.path.isfile('thick_final_result.csv'):
         with st.container():
             st.subheader('Leg Image Processing 과정 없이 직접 입력')
             
