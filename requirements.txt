@@ -12,4 +12,6 @@ time
 os
 rembg
 PIL
-pyheif
+joblib
+sklearn
+os
