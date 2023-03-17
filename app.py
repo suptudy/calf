@@ -243,23 +243,30 @@ if choose == "Estimate Calf Round":
         with st.container():
             st.subheader('Leg Image Processing 진행을 했을 경우')
             
-            df = pd.read_csv('thick_final_result.csv')
-            st.dataframe(df)
-            
-            frontNumR = df['front_thick_width'][0]
-            frontNumL = df['front_thick_width'][1]
-            sideNumR = df['side_thick_width'][0]
-            sideNumL = df['side_thick_width'][1]
-            col3, col4 = st.columns(2)
+            reset = st.button("Leg Image Processing 초기화")
+            if reset:
+                os.remove('thick_final_result.csv') 
+                with st.container():
+                    st.write("test")
+            else:
+                df = pd.read_csv('thick_final_result.csv')
+                st.dataframe(df)
                 
-            with col3:
-                st.subheader("앞면 width (mm)")
-                st.write('오른쪽 앞면 width에 대한 값은 ', frontNumR)
-                st.write('왼쪽 앞면 width에 대한 값은 ', frontNumL)
-            with col4:
-                st.subheader("옆면 width (mm)")
-                st.write('오른쪽 옆면 width에 대한 값은 ', sideNumR)
-                st.write('왼쪽 옆면 width에 대한 값은 ', sideNumL)
+                frontNumR = df['front_thick_width'][0]
+                frontNumL = df['front_thick_width'][1]
+                sideNumR = df['side_thick_width'][0]
+                sideNumL = df['side_thick_width'][1]
+                col3, col4 = st.columns(2)
+                    
+                with col3:
+                    st.subheader("앞면 width (mm)")
+                    st.write('오른쪽 앞면 width에 대한 값은 ', frontNumR)
+                    st.write('왼쪽 앞면 width에 대한 값은 ', frontNumL)
+                with col4:
+                    st.subheader("옆면 width (mm)")
+                    st.write('오른쪽 옆면 width에 대한 값은 ', sideNumR)
+                    st.write('왼쪽 옆면 width에 대한 값은 ', sideNumL)
+                
 
     # model
     # 직접 입력하는 경우 : frontNum, sideNum
