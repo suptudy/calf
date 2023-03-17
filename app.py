@@ -8,7 +8,6 @@ import pandas as pd
 import numpy as np
 import time
 from rembg import remove # pip install rembg
-import pyheif
 
 import image_function # resize, contour
 import find_thick_part as thick
