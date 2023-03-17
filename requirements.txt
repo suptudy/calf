@@ -14,4 +14,3 @@ rembg
 PIL
 joblib
 sklearn
-os
