@@ -11,6 +11,7 @@ from rembg import remove # pip install rembg
 
 import image_function # resize, contour
 import find_thick_part as thick
+import joblib
 
 # 사진 넣으면 4개의 데이터 출력
 # 정면 왼쪽 사진 | 정면 오른쪽 사진 | 옆면 왼쪽 사진 | 옆면 오른쪽 사진
@@ -267,7 +268,9 @@ if choose == "Estimate Calf Round":
     st.subheader("종아리 둘레 예측 결과")
     check_result = st.button("확인")
     if check_result:
-        st.write('test')
+        loaded_model = joblib.load('lrmodel.pkl')
+        score = loaded_model.score(x,y)
+        st.write('정확도: {score:.3f}'.format(score=score))
         
 # Guide
 if choose == "Guide":
