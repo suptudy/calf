@@ -244,19 +244,25 @@ if choose == "Estimate Calf Round":
             
             df = pd.read_csv('thick_final_result.csv')
             st.dataframe(df)
-                
+            
+            frontNumR = df['front_thick_width'][0]
+            frontNumL = df['front_thick_width'][1]
+            sideNumR = df['side_thick_width'][0]
+            sideNumL = df['side_thick_width'][1]
             col3, col4 = st.columns(2)
                 
             with col3:
                 st.subheader("앞면 width (mm)")
-                st.write('오른쪽 앞면 width에 대한 값은 ', df['front_thick_width'][0])
-                st.write('왼쪽 앞면 width에 대한 값은 ', df['front_thick_width'][1])
+                st.write('오른쪽 앞면 width에 대한 값은 ', frontNumR)
+                st.write('왼쪽 앞면 width에 대한 값은 ', frontNumL)
             with col4:
                 st.subheader("옆면 width (mm)")
-                st.write('오른쪽 옆면 width에 대한 값은 ', df['side_thick_width'][0])
-                st.write('왼쪽 옆면 width에 대한 값은 ', df['side_thick_width'][1])
+                st.write('오른쪽 옆면 width에 대한 값은 ', sideNumR)
+                st.write('왼쪽 옆면 width에 대한 값은 ', sideNumL)
 
     # model
+    # 직접 입력하는 경우 : frontNum, sideNum
+    # 이미지 전처리 과정 진행하는 경우 : frontNumR, fronNumL, sideNumR, sideNumL
     st.markdown("""---""")
     st.subheader("종아리 둘레 예측 결과")
     check_result = st.button("확인")
@@ -307,11 +313,8 @@ if choose == "Guide":
     ### :pushpin: Leg Image Processing
     - 이미지에 대한 처리 과정 및 두꺼운 부분에 대한 위치, 길이를 **Final Result**에서 확인할 수 있습니다.
     ### :pushpin: Estimate Calf Round (수정)
-    - `Leg Image Processing 과정X`
-        - 종아리 둘레 예측 결과를 확인하기 위해 필요한 값을 Leg Image Processing에서 확인하여 입력합니다. 
-            - 앞면 width (mm) : front thick width
-            - 옆면 width (mm) : side thick width
-    - `Leg Image Processing 과정O`
+    - Leg Image Processing 과정 없이 직접 입력하여 [확인] 버튼으로 예측 결과를 확인할 수 있습니다.
+    - 
     
     ---
     ##### [Image Processing and Intelligent Systems Laboratory](https://www.ipis.cau.ac.kr/%ED%99%88)
@@ -321,8 +324,8 @@ if choose == "Guide":
     - Seung Hee Han
     - Seong Ha Park
     - Joonki Paik
-    ##### ________________________________________________
-"""
+    ---
+    """
 )
     # file = 'thick_final_result.csv'
     # if os.path.isfile(file):
