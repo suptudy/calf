@@ -304,7 +304,7 @@ if choose == "Guide":
     ### :pushpin: Calf Program 유의사항
     - 페이지를 이동하면 결과가 사라집니다 
         - ex. Leg Image Processing 페이지에서 Estimate Calf Round 페이지로 넘어갔다가 다시 돌아가면 초기 상태로 돌아갑니다. \n 
-            앞에서 실행했던 Leg Image Processing에 대한 결과는 `Leg Image Processing 과정O` 에 저장되어 있습니다. 
+            앞에서 실행했던 Leg Image Processing에 대한 결과는 `Leg Image Processing 과정O` 에 저장되어 있습니다. (수정해야함)
     
     ---
     
