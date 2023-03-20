@@ -58,7 +58,7 @@ if choose == "Board Pixel CSV file":
             df.to_csv('board_pixel - front.csv', index=False) # 일부러 막아놨었음
         else :
             st.write('sample csv file')
-            df = pd.read_csv('board_pixel - front.csv')
+            df = pd.read_csv('guide_csv/sample_front.csv')
             st.dataframe(df)
             
     with st.container():
@@ -70,7 +70,7 @@ if choose == "Board Pixel CSV file":
             df.to_csv('board_pixel - rightside.csv', index=False) # 일부러 막아놨었음
         else :
             st.write('sample csv file')
-            df = pd.read_csv('board_pixel - leftside.csv')
+            df = pd.read_csv('guide_csv/sample_right.csv')
             st.dataframe(df)
 
     with st.container():
@@ -82,7 +82,7 @@ if choose == "Board Pixel CSV file":
             df.to_csv('board_pixel - leftside.csv', index=False) # 일부러 막아놨었음
         else :
             st.write('sample csv file')
-            df = pd.read_csv('board_pixel - leftside.csv')
+            df = pd.read_csv('guide_csv/sample_left.csv')
             st.dataframe(df)
 
         
@@ -293,8 +293,8 @@ if choose == "Estimate Calf Round":
                     st.write('왼쪽 앞면 width에 대한 값은 ', frontNumL)
                 with col4:
                     st.subheader("옆면 width (mm)")
-                    st.write('오른쪽 옆면 width에 대한 값은 ', sideNumR)
-                    st.write('왼쪽 옆면 width에 대한 값은 ', sideNumL)
+                    st.write('오른쪽 옆면 width에 대한 값은 ', int(sideNumR))
+                    st.write('왼쪽 옆면 width에 대한 값은 ', int(sideNumL))
 
 
                 st.subheader("종아리 둘레 예측 결과")
@@ -311,7 +311,7 @@ if choose == "Estimate Calf Round":
     else :
         if reset:
             st.write('Leg Image Processing 과정을 거치지 않았거나 초기화 되었습니다.\n')
-            st.write('1) 위에서 직접 입력하세요.\n2) Leg Image Processing 과정을 진행하세요.')
+            st.write('1) 위에서 직접 입력하세요.\n2) Board Pixel CSV file을 업로드 후, Leg Image Processing 과정을 진행하세요.')
 
 
 # Guide
@@ -336,7 +336,7 @@ if choose == "Guide":
     """)
     
     img = Image.open('guide_img/nameInfo.png') 
-    st.image(img, width=500, caption="각 이미지별 이름 예시 (001 : 사람 ID)", output_format='PNG') 
+    st.image(img, width=600, caption="각 이미지별 이름 예시 (001 : 사람 ID)", output_format='PNG') 
     
     st.markdown(
     """
@@ -345,32 +345,40 @@ if choose == "Guide":
         - 이미지의 이름 끝에 반드시 앞면은 **f**, 옆면(오른쪽)은 **r**, 옆면(왼쪽)은 **l**이 들어가야 합니다. 
         - 예시) 001_f.jpg, 001_r.jpg, 001_l.jpg
         
-    - 폼보드 각 모서리의 픽셀값
+    ##### 폼보드 각 모서리의 픽셀값
+    - Leg Image Processing 과정을 진행하기 위해 필요합니다. 
     
     ### :pushpin: Calf Program 유의사항
     - 페이지를 이동하면 결과가 사라집니다 
         - ex. Leg Image Processing 페이지에서 Estimate Calf Round 페이지로 넘어갔다가 다시 돌아가면 초기 상태로 돌아갑니다. \n 
-            앞에서 실행했던 Leg Image Processing에 대한 결과는 `Leg Image Processing 과정O` 에 저장되어 있습니다. 
+            앞에서 실행했던 Leg Image Processing에 대한 결과는 `Leg Image Processing 진행을 했을 경우` 에 저장되어 있습니다. 
     
     ---
     
     ### :pushpin: Board Pixel CSV file
     - 폼보드에 보이는 다리만 측정할 수 있도록 폼보드의 모서리 픽셀값이 적혀있는 엑셀 파일이 필요합니다. 
+    - `sample csv file` 를 통해 예시를 확인할 수 있습니다. 
+
     ### :pushpin: Leg Image Processing
     - 이미지에 대한 처리 과정 및 두꺼운 부분에 대한 위치, 길이를 **Final Result**에서 확인할 수 있습니다.
-    ### :pushpin: Estimate Calf Round (수정)
-    - Leg Image Processing 과정 없이 직접 입력하여 [확인] 버튼으로 예측 결과를 확인할 수 있습니다.
-    - 
-    
+    ### :pushpin: Estimate Calf Round
+    - **Leg Image Processing 과정 없이 직접 입력**
+        - 앞면 width, 옆면 width를 직접 입력한 후, [확인] 버튼으로 예측 결과를 확인할 수 있습니다.
+    - **Leg Image Processing 진행을 했을 경우**
+        - Board Pixel CSV file을 업로드 후, Leg Image Progress 과정을 진행하면 자동으로 종아리 둘레 예측 결과가 나옵니다.  
     ---
     ##### [Image Processing and Intelligent Systems Laboratory](https://www.ipis.cau.ac.kr/%ED%99%88)
-    (Chung-Ang University, Seoul 06974, Korea)
-    - Su Bin Kwon
-    - Hae Jun Cho
-    - Seung Hee Han
-    - Seong Ha Park
-    - Joonki Paik
+
+    - Su Bin Kwon¹
+    - Hae Jun Cho¹
+    - Seung Hee Han²
+    - Seong Ha Park³
+    - Joonki Paik¹² \n
+    ¹ Department of Artificial Intelligence, Chung-Ang University, Seoul 06974, South Korea\n
+    ² Department of Image, Chung-Ang University, Seoul 06974, South Korea\n
+    ³ Division of Cultural Heritage Convergence, Korea University Sejong Campus, Sejong 30019, South Korea \n
     ---
+    
     """
 )
     # file = 'thick_final_result.csv'
