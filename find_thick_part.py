@@ -127,7 +127,7 @@ def find_thick_part_front(f, res1, thick_resultR, thick_resultL):
       thick_resultR = pd.concat([thick_resultR, right_df])
 
   # plt image save test
-  final_path = '/home/ksbds44/workspace/calf/final_img/' + f
+  final_path = 'final_img/' + f
   plt.imshow(res1)
   plt.savefig(final_path)
   plt.figure()
@@ -202,7 +202,7 @@ def find_thick_part_side(f, res1, thick_resultR): # 옆면 추출에 대한 수�
       thick_resultR = pd.concat([thick_resultR, right_df])
 
   # plt image save test
-  final_path = '/home/ksbds44/workspace/calf/final_img/' + f
+  final_path = 'final_img/' + f
   plt.imshow(res1)
   plt.savefig(final_path)
   plt.figure()

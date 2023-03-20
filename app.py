@@ -55,7 +55,7 @@ if choose == "Board Pixel CSV file":
         if uploaded_csv :
             df = pd.read_csv(uploaded_csv)
             st.write(df)
-            # df.to_csv('board_pixel - front.csv', index=False) # 일부러 막아놓음
+            df.to_csv('board_pixel - front.csv', index=False) # 일부러 막아놨었음
         else :
             st.write('sample csv file')
             df = pd.read_csv('board_pixel - front.csv')
@@ -67,7 +67,7 @@ if choose == "Board Pixel CSV file":
         if uploaded_csv :
             df = pd.read_csv(uploaded_csv)
             st.write(df)
-            # df.to_csv('board_pixel - rightside.csv', index=False) # 일부러 막아놓음
+            df.to_csv('board_pixel - rightside.csv', index=False) # 일부러 막아놨었음
         else :
             st.write('sample csv file')
             df = pd.read_csv('board_pixel - leftside.csv')
@@ -79,7 +79,7 @@ if choose == "Board Pixel CSV file":
         if uploaded_csv :
             df = pd.read_csv(uploaded_csv)
             st.write(df)
-            # df.to_csv('board_pixel - leftside.csv', index=False) # 일부러 막아놓음
+            df.to_csv('board_pixel - leftside.csv', index=False) # 일부러 막아놨었음
         else :
             st.write('sample csv file')
             df = pd.read_csv('board_pixel - leftside.csv')
@@ -129,7 +129,7 @@ if choose == "Leg Image Processing":
         
     # read board pixel front 
     df_front = pd.read_csv('./board_pixel - front.csv') 
-    df_right = pd.read_csv('./board_pixel - leftside.csv') ########################### rightside로 수정해야함
+    df_right = pd.read_csv('./board_pixel - rightside.csv') ########################### rightside로 수정해야함
     df_left = pd.read_csv('./board_pixel - leftside.csv') 
     df_list = [df_front, df_right, df_left]
     
@@ -328,6 +328,7 @@ if choose == "Guide":
     
     st.markdown(
     """
+    - 최대한 수평을 맞추어 촬용을 진행해야 합니다. 
     - 폼보드(흰색)에 종아리가 다 들어와야하며, 최대한 옷이 나오지 않아야 합니다. 
     - 옆면 촬영 시, 다른 쪽의 다리가 보이지 않도록 촬영해야 합니다.
     
