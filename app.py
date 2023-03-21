@@ -226,8 +226,7 @@ if choose == "Leg Image Processing":
         thick_final_result = thick_final_result.append(new_row_right, ignore_index=True)
         
         st.subheader("Final result") 
-        st.markdown("""id : 이미지명\nfront_thick_width : 앞면 두꺼운 부분의 mm\n
-                    side_thick_width : 옆면 두꺼운 부분의 mm\nreal_lr : 0(왼쪽), 1(오른쪽)""")
+        st.markdown("""id : 이미지명\nfront_thick_width : 앞면 두꺼운 부분의 mm\nside_thick_width : 옆면 두꺼운 부분의 mm\nreal_lr : 0(왼쪽), 1(오른쪽)""")
         st.dataframe(thick_final_result) # model에 들어갈 최종 데이터프레임
         thick_final_result.to_csv('thick_final_result.csv', index=False)
         
