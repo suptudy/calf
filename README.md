@@ -1,5 +1,8 @@
 # 휴대폰 영상을 이용한 종아리 둘레 측정 방법 개발
 
+### :pushpin: Streamlit Deploy
+👋 [Demo App](https://suptudy-calf-app-x5u5wa.streamlit.app/)
+
 ### :pushpin: 프로젝트 개요
 휴대폰을 이용해 촬영한 종아리의 앞면, 옆면 영상으로 종아리 둘레를 예측한다.
 
@@ -44,9 +47,6 @@
 - `Leg Image Processing 했을 경우`
 
     Board Pixel CSV file을 업로드 후, Leg Image Progress 과정을 진행하면 자동으로 종아리 둘레 예측 결과가 나옵니다.
-
-### :pushpin: Streamlit Deploy
-👋 [Demo App](https://suptudy-calf-app-x5u5wa.streamlit.app/)
 
 ### :computer: [Image Processing and Intelligent Systems Laboratory](https://www.ipis.cau.ac.kr/%ED%99%88)
     (Chung-Ang University, Seoul 06974, Korea)
