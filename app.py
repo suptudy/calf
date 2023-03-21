@@ -90,7 +90,7 @@ if choose == "Board Pixel CSV file":
 if choose == "Leg Image Processing":
     st.title('Leg Image Processing') 
     st.markdown(""" 
-    한 명에 대한 다리 이미지를 넣어주세요
+    한 명에 대한 3장의 이미지(앞면, 좌측면, 우측면)를 모두 넣어주세요
     """)
 
     uploaded_files = st.file_uploader(label=" ", type=['png','jpg'], accept_multiple_files=True)
@@ -129,7 +129,7 @@ if choose == "Leg Image Processing":
         
     # read board pixel front 
     df_front = pd.read_csv('./board_pixel - front.csv') 
-    df_right = pd.read_csv('./board_pixel - rightside.csv') ########################### rightside로 수정해야함
+    df_right = pd.read_csv('./board_pixel - rightside.csv') # rightside로 수정해야함
     df_left = pd.read_csv('./board_pixel - leftside.csv') 
     df_list = [df_front, df_right, df_left]
     
@@ -180,6 +180,9 @@ if choose == "Leg Image Processing":
         thick_final_result = thick_final_result.append(new_row_right, ignore_index=True)
         
         st.subheader("Final result") 
+        st.markdown("""
+        id : 저장된 이미지명 | fron_thick_width : 앞면 제일 두꺼운 부분 | side_thick_width : 옆면 제일 두꺼운 부분 | real_lr : 0(왼쪽), 1(오른쪽))
+        """)
         st.dataframe(thick_final_result) # model에 들어갈 최종 데이터프레임
         thick_final_result.to_csv('thick_final_result.csv', index=False)
         
