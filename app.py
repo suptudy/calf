@@ -39,10 +39,11 @@ with st.sidebar:
                          icons=['paperclip','border','person-circle', 'cpu'],
                          menu_icon="app-indicator", default_index=0,
                          styles={
-        "container": {"padding": "5!important", "background-color": "#fafafa"},
-        "icon": {"color": "#004C97", "font-size": "20px"}, 
+        "container": {"padding": "5!important", "background-color": "#AIC3DA"},
+        #"menu-icon": {"color": "#004C97"},
+        "icon": {"font-size": "20px"}, 
         "nav-link": {"font-size": "16px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "#02ab21"},
+        "nav-link-selected": {"background-color": "#969491"},
     }
     )
 
@@ -225,8 +226,8 @@ if choose == "Leg Image Processing":
         thick_final_result = thick_final_result.append(new_row_right, ignore_index=True)
         
         st.subheader("Final result") 
-        st.markdown("""id : 이미지명 | front_thick_width : 앞면 두꺼운 부분의 mm | side_thick_width : 옆면 두꺼운 부분의 mm | real_lr : 0(왼쪽), 1(오른쪽)
-                    """)
+        st.markdown("""id : 이미지명\nfront_thick_width : 앞면 두꺼운 부분의 mm\n
+                    side_thick_width : 옆면 두꺼운 부분의 mm\nreal_lr : 0(왼쪽), 1(오른쪽)""")
         st.dataframe(thick_final_result) # model에 들어갈 최종 데이터프레임
         thick_final_result.to_csv('thick_final_result.csv', index=False)
         
@@ -280,7 +281,7 @@ if choose == "Leg Image Processing":
 if choose == "Estimate Calf Round":
     st.title('Estimate Calf Round')
     st.markdown("""
-    - **Leg Image Processing 과정 없이 직접 입력**
+    - **Leg Image Processing 없이 직접 입력**
         - 앞면 width, 옆면 width를 직접 입력한 후, [확인] 버튼으로 예측 결과를 확인할 수 있습니다.
     - **Leg Image Processing 진행을 했을 경우**
         - Board Pixel CSV file을 업로드 후, Leg Image Progress 과정을 진행하면 자동으로 종아리 둘레 예측 결과가 나옵니다.
@@ -317,7 +318,7 @@ if choose == "Estimate Calf Round":
                     st.write('둘레는 {} mm 입니다.'.format(calf))
             
     st.markdown("""---""")
-    st.subheader('Leg Image Processing 진행을 했을 경우')
+    st.subheader('Leg Image Processing 했을 경우')
             
     reset = st.button("Leg Image Processing 초기화")
     
@@ -397,7 +398,7 @@ if choose == "Guide":
         
     ##### 폼보드 각 모서리의 픽셀값
     - Leg Image Processing 과정을 진행하기 위해 필요합니다. 
-    
+
     ### :pushpin: Calf Program 유의사항
     - 페이지를 이동하면 결과가 사라집니다 
         - ex. Leg Image Processing 페이지에서 Estimate Calf Round 페이지로 넘어갔다가 다시 돌아가면 초기 상태로 돌아갑니다. \n 
@@ -410,6 +411,12 @@ if choose == "Guide":
     - `sample csv file` 를 통해 예시를 확인할 수 있습니다. 
 
     ### :pushpin: Leg Image Processing
+    """)
+    
+    img = Image.open('guide_img/ProcessInfo.png') 
+    st.image(img)
+    
+    st.markdown("""
     - 이미지에 대한 처리 과정 및 두꺼운 부분에 대한 위치, 길이를 **Final Result**에서 확인할 수 있습니다.
     ### :pushpin: Estimate Calf Round
     - **Leg Image Processing 과정 없이 직접 입력**
@@ -429,8 +436,7 @@ if choose == "Guide":
     ³ Division of Cultural Heritage Convergence, Korea University Sejong Campus, Sejong 30019, South Korea \n
     ---
     
-    """
-)
+    """)
     # file = 'thick_final_result.csv'
     # if os.path.isfile(file):
     #     os.remove(file) 
