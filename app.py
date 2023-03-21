@@ -48,14 +48,49 @@ with st.sidebar:
 
 # Board Pixel CSV file
 if choose == "Board Pixel CSV file":
-    st.title('Board Pixel CSV file') 
+    st.title('Board Pixel CSV file')
+    st.markdown("""
+    - 폼보드에 보이는 다리만 측정할 수 있도록 폼보드의 모서리 픽셀값이 적혀있는 엑셀 파일이 필요합니다. 
+    - 아래의 `sample csv file` 를 통해 예시를 확인할 수 있습니다. 
+    ---
+    """)
+            
+    # 삭제 버튼들
+    with st.container():
+        st.write('(Drag and drop에 올려놓은 파일을 삭제(x 버튼) 후, 버튼을 클릭하세요)')
+        col1, col2, col3 = st.columns(3)
+        with col1:  
+            front_reset = st.button("Front csv file 초기화")
+            if front_reset:
+                if os.path.isfile('board_pixel-f.csv'):
+                    os.remove('board_pixel-f.csv')
+                    st.write("Front csv file이 삭제되었습니다.")
+                else:
+                    st.write("삭제할 Front csv file이 없습니다.")
+        with col2:
+            right_reset = st.button("Right csv file 초기화")
+            if right_reset:
+                if os.path.isfile('board_pixel-r.csv'):
+                    os.remove('board_pixel-r.csv')
+                    st.write("Right csv file이 삭제되었습니다.")
+                else:
+                    st.write("삭제할 Right csv file이 없습니다.")
+        with col3:
+            left_reset = st.button("Left csv file 초기화")
+            if left_reset:
+                if os.path.isfile('board_pixel-l.csv'):
+                    os.remove('board_pixel-l.csv')
+                    st.write("Left csv file이 삭제되었습니다.")
+                else:
+                    st.write("삭제할 Left csv file이 없습니다.")
+    
     with st.container():
         st.subheader("앞면에 대한 board pixel csv file")
         uploaded_csv = st.file_uploader("Choose CSV file", key="1")
         if uploaded_csv :
             df = pd.read_csv(uploaded_csv)
             st.write(df)
-            df.to_csv('board_pixel - front.csv', index=False) # 일부러 막아놨었음
+            df.to_csv('board_pixel-f.csv', index=False) # 일부러 막아놨었음
         else :
             st.write('sample csv file')
             df = pd.read_csv('guide_csv/sample_front.csv')
@@ -67,7 +102,7 @@ if choose == "Board Pixel CSV file":
         if uploaded_csv :
             df = pd.read_csv(uploaded_csv)
             st.write(df)
-            df.to_csv('board_pixel - rightside.csv', index=False) # 일부러 막아놨었음
+            df.to_csv('board_pixel-r.csv', index=False) # 일부러 막아놨었음
         else :
             st.write('sample csv file')
             df = pd.read_csv('guide_csv/sample_right.csv')
@@ -79,20 +114,20 @@ if choose == "Board Pixel CSV file":
         if uploaded_csv :
             df = pd.read_csv(uploaded_csv)
             st.write(df)
-            df.to_csv('board_pixel - leftside.csv', index=False) # 일부러 막아놨었음
+            df.to_csv('board_pixel-l.csv', index=False) # 일부러 막아놨었음
         else :
             st.write('sample csv file')
             df = pd.read_csv('guide_csv/sample_left.csv')
             st.dataframe(df)
-
         
 # Leg Image Processing
 if choose == "Leg Image Processing":
     st.title('Leg Image Processing') 
     st.markdown(""" 
-    한 명에 대한 다리 이미지를 넣어주세요
+    - 한 명에 대한 3장의 이미지(앞면, 옆면(오른쪽), 옆면(왼쪽)을 모두 넣어주세요
+    - 이미지에 대한 처리 과정 및 두꺼운 부분에 대한 위치, 길이를 **Final Result**에서 확인할 수 있습니다.
+    ---
     """)
-
     uploaded_files = st.file_uploader(label=" ", type=['png','jpg'], accept_multiple_files=True)
     
     col1, col2, col3 = st.columns(3)
@@ -127,17 +162,27 @@ if choose == "Leg Image Processing":
             real_image_list.insert(2, real_image)
             remove_image_list.insert(2, remove_image)
         
-    # read board pixel front 
-    df_front = pd.read_csv('./board_pixel - front.csv') 
-    df_right = pd.read_csv('./board_pixel - rightside.csv') ########################### rightside로 수정해야함
-    df_left = pd.read_csv('./board_pixel - leftside.csv') 
-    df_list = [df_front, df_right, df_left]
+    # read board pixel front
+    if os.path.isfile('board_pixel-f.csv') and os.path.isfile('board_pixel-r.csv') and os.path.isfile('board_pixel-l.csv'): 
+        df_front = pd.read_csv('./board_pixel-f.csv') 
+        df_right = pd.read_csv('./board_pixel-r.csv')
+        df_left = pd.read_csv('./board_pixel-l.csv') 
+        df_list = [df_front, df_right, df_left]
+    else:
+        st.markdown("""---""")
+        st.write("**업로드되지 않은 csv 파일이 있습니다. 확인하시길 바랍니다.**")
+        if not os.path.isfile('board_pixel-f.csv'):
+            st.write("- 앞면에 대한 board pixel csv file이 없습니다.")
+        if not os.path.isfile('board_pixel-r.csv'):
+            st.write("- 옆면(오른쪽)에 대한 board pixel csv file이 없습니다.")
+        if not os.path.isfile('board_pixel-l.csv'):
+            st.write("- 옆면(왼쪽)에 대한 board pixel csv file이 없습니다.")
     
     # 이미지가 들어오면 진행 
     if remove_image_list:
         # dst is resize as board
         resize_img, dst0, point = image_function.resize_front(np.array(remove_image_list[0]), df_list[0])
-        resize_img, dst1, point = image_function.resize_leftside(np.array(remove_image_list[1]), df_list[1]) # resize_rightside로 수정할것
+        resize_img, dst1, point = image_function.resize_leftside(np.array(remove_image_list[1]), df_list[1]) 
         resize_img, dst2, point = image_function.resize_leftside(np.array(remove_image_list[2]), df_list[2])
         # contour_image(numpy.ndarray)
         contour_img0 = image_function.leg_contour(dst0)
@@ -180,6 +225,8 @@ if choose == "Leg Image Processing":
         thick_final_result = thick_final_result.append(new_row_right, ignore_index=True)
         
         st.subheader("Final result") 
+        st.markdown("""id : 이미지명 | front_thick_width : 앞면 두꺼운 부분의 mm | side_thick_width : 옆면 두꺼운 부분의 mm | real_lr : 0(왼쪽), 1(오른쪽)
+                    """)
         st.dataframe(thick_final_result) # model에 들어갈 최종 데이터프레임
         thick_final_result.to_csv('thick_final_result.csv', index=False)
         
@@ -226,19 +273,22 @@ if choose == "Leg Image Processing":
             st.subheader("Right Leg")
         with col3:
             st.subheader("Left Leg")
+    
+    # 정렬하여 표시 후, 삭제 
             
 # Estimate Calf Round
 if choose == "Estimate Calf Round":
-    regressor = load_prediction_model('lrmodel.pkl')
     st.title('Estimate Calf Round')
+    st.markdown("""
+    - **Leg Image Processing 과정 없이 직접 입력**
+        - 앞면 width, 옆면 width를 직접 입력한 후, [확인] 버튼으로 예측 결과를 확인할 수 있습니다.
+    - **Leg Image Processing 진행을 했을 경우**
+        - Board Pixel CSV file을 업로드 후, Leg Image Progress 과정을 진행하면 자동으로 종아리 둘레 예측 결과가 나옵니다.
+    - 종아리 왼쪽, 오른쪽에 상관 없이, **mm 단위**로 입력해주세요  
+    ---            
+    """)
+    regressor = load_prediction_model('lrmodel.pkl')
 
-
-#--------------------------
-    st.markdown(
-    """종아리 왼쪽, 오른쪽에 상관 없이, **mm 단위**로 입력해주세요 \n
-        
-    """
-    )
     #if not os.path.isfile('thick_final_result.csv'):
     with st.container():
         st.subheader('Leg Image Processing 과정 없이 직접 입력')
