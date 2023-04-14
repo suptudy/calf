@@ -7,7 +7,7 @@ import cv2
 import pandas as pd
 import numpy as np
 import time
-# from rembg import remove # pip install rembg
+from rembg import remove # pip install rembg ########################################## 주석 해제
 
 import image_function # resize, contour
 import find_thick_part as thick

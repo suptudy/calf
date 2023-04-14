@@ -30,7 +30,7 @@ def on_mouse(event, x, y, flags, param):
 
 cnt = 0
 img_pts = np.zeros([4, 2], dtype=np.float32)
-img=cv2.imread('C:/calf/calf_picture/train/001_f.jpg')
+img=cv2.imread('final_img/001_f.jpg')
 img=imutils.resize(img, width=800)
 
 if img is None:
