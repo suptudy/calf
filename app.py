@@ -7,7 +7,7 @@ import cv2
 import pandas as pd
 import numpy as np
 import time
-from rembg import remove # pip install rembg
+# from rembg import remove # pip install rembg
 
 import image_function # resize, contour
 import find_thick_part as thick
@@ -35,8 +35,8 @@ def load_prediction_model(model_file):
 
 # sidebar
 with st.sidebar:
-    choose = option_menu("Calf Program", ["Guide","Board Pixel CSV file", "Leg Image Processing", "Estimate Calf Round"],
-                         icons=['paperclip','border','person-circle', 'cpu'],
+    choose = option_menu("Calf Program", ["Guide","Board Pixel CSV file", "(CSV file) Leg Image Processing", "(exe file) Leg Image Processing","Estimate Calf Round"],
+                         icons=['paperclip','border','person-circle', 'person-circle', 'cpu'],
                          menu_icon="app-indicator", default_index=0,
                          styles={
         "container": {"padding": "5!important", "background-color": "#AIC3DA"},
@@ -122,8 +122,8 @@ if choose == "Board Pixel CSV file":
             st.dataframe(df)
         
 # Leg Image Processing
-if choose == "Leg Image Processing":
-    st.title('Leg Image Processing') 
+if choose == "(CSV file) Leg Image Processing":
+    st.title('(CSV file) Leg Image Processing') 
     st.markdown(""" 
     - 한 명에 대한 3장의 이미지(앞면, 옆면(오른쪽), 옆면(왼쪽)을 모두 넣어주세요
     - 이미지에 대한 처리 과정 및 두꺼운 부분에 대한 위치, 길이를 **Final Result**에서 확인할 수 있습니다.
@@ -275,7 +275,145 @@ if choose == "Leg Image Processing":
             st.subheader("Left Leg")
     
     # 정렬하여 표시 후, 삭제 
+
+# Leg Image Processing
+if choose == "(exe file) Leg Image Processing":
+    st.title('(exe file) Leg Image Processing') 
+    st.markdown(""" 
+    - 한 명에 대한 3장의 이미지(앞면, 옆면(오른쪽), 옆면(왼쪽)을 모두 넣어주세요
+    - 이미지에 대한 처리 과정 및 두꺼운 부분에 대한 위치, 길이를 **Final Result**에서 확인할 수 있습니다.
+    ---
+    """)
+    uploaded_files = st.file_uploader(label=" ", type=['png','jpg'], accept_multiple_files=True)
+    
+    col1, col2, col3 = st.columns(3)
+    real_image_list = []
+    remove_image_list = []
+    df_list = [] 
+
+    for uploaded_file in uploaded_files:
+        st.write("filename:", uploaded_file.name)
+        real_image = Image.open(uploaded_file)
+        
+        # 진행률 표시줄 표시
+        progress_text = "Operation in progress. Please wait."
+        my_bar = st.progress(0, text=progress_text)
+
+        for percent_complete in range(100):
+            time.sleep(0.1)
+            my_bar.progress(percent_complete + 1, text=progress_text)
             
+        # u2-net
+        remove_image = remove(real_image)
+        
+        # 최종 이미지들 list화 : 이미지 순서 상관없이 drag, drop 가능 
+        check_append_order = uploaded_file.name[-5:-4]
+        if check_append_order == 'f':
+            real_image_list.insert(0, real_image)
+            remove_image_list.insert(0, remove_image)
+        elif check_append_order == 'r':
+            real_image_list.insert(1, real_image)
+            remove_image_list.insert(1, remove_image)
+        elif check_append_order == 'l':
+            real_image_list.insert(2, real_image)
+            remove_image_list.insert(2, remove_image)
+    
+    # 이미지가 들어오면 진행 
+    if remove_image_list:
+        # dst is resize as board - (CSV file) Leg Image Processing 과 다르게 과정 삭제 
+
+        # contour_image(numpy.ndarray)
+        contour_img0 = image_function.leg_contour(np.array(remove_image_list[0]))
+        contour_img1 = image_function.leg_contour(np.array(remove_image_list[1]))
+        contour_img2 = image_function.leg_contour(np.array(remove_image_list[2]))
+        
+        temp_path = 'temp_img/' + uploaded_file.name
+        cv2.imwrite(temp_path, contour_img0) # test image 
+        cv2.imwrite(temp_path, contour_img1) # test image 
+        cv2.imwrite(temp_path, contour_img2) # test image 
+
+        # make_thick_csv (front)
+        thick_resultFR, thick_resultFL = image_function.make_thick_csv()
+        # make_thick_csv (side)
+        thick_resultR, thick_resultL = image_function.make_thick_csv()
+
+        # find thick part (front)
+        thick_resultFR, thick_resultFL = thick.find_thick_part_front(uploaded_file.name, contour_img0, thick_resultFR, thick_resultFL)
+        thick_result_merge = pd.merge(thick_resultFR, thick_resultFL)
+
+        # find thick part (옆면)
+        thick_resultR = thick.find_thick_part_side(uploaded_file.name, contour_img1, thick_resultR)
+        thick_resultL = thick.find_thick_part_side(uploaded_file.name, contour_img2, thick_resultL)
+        
+        # print final dataframe
+        # st.dataframe(thick_result_merge.iloc[0]) # 확인용 (결과 한줄만 필요)
+
+        
+        # 모든 데이터프레임을 합쳐서 저장할 것 필요 
+        thick_final_result = image_function.make_final_csv()
+        new_row_left = {'id':thick_result_merge['id'].iloc[0], 
+                   'front_thick_width':thick_result_merge['left_thick_width'].iloc[0],
+                   'side_thick_width':thick_resultL['side_thick_width'].iloc[0], # 옆면 csv 파일에 따른 결과에 맞춰 수정 필요 
+                   'real_lr': 0}
+        new_row_right = {'id':thick_result_merge['id'].iloc[0], 
+                   'front_thick_width':thick_result_merge['right_thick_width'].iloc[0],
+                   'side_thick_width':thick_resultR['side_thick_width'].iloc[0], # 옆면 csv 파일에 따른 결과에 맞춰 수정 필요 
+                   'real_lr': 1}
+        thick_final_result = thick_final_result.append(new_row_left, ignore_index=True)
+        thick_final_result = thick_final_result.append(new_row_right, ignore_index=True)
+        
+        st.subheader("Final result") 
+        st.markdown("""id : 이미지명\nfront_thick_width : 앞면 두꺼운 부분의 mm\nside_thick_width : 옆면 두꺼운 부분의 mm\nreal_lr : 0(왼쪽), 1(오른쪽)""")
+        st.dataframe(thick_final_result) # model에 들어갈 최종 데이터프레임
+        thick_final_result.to_csv('thick_final_result.csv', index=False)
+        
+    # -----------------------------------------------------------------------
+    # 정렬하여 표시
+    # -----------------------------------------------------------------------
+    if real_image_list :
+        with col1:
+            st.subheader("Front Leg")
+            st.caption("Original Front Leg")
+            st.image(real_image_list[0])
+            st.caption("Remove Background Front Leg")
+            st.image(remove_image_list[0])
+            st.caption("Resize Front Leg")
+            st.image(dst0)
+            st.caption("Contour Front Leg")
+            st.image(contour_img0)
+                    
+        with col2:
+            st.subheader("Right Leg")
+            st.caption("Original Right Leg")
+            st.image(real_image_list[1])
+            st.caption("Remove Background Front Leg")
+            st.image(remove_image_list[1])
+            st.caption("Resize Right Leg")
+            st.image(dst1)
+            st.caption("Contour Right Leg")
+            st.image(contour_img1)
+            
+        with col3:
+            st.subheader("Left Leg")
+            st.caption("Original Left Leg")
+            st.image(real_image_list[2])
+            st.caption("Remove Background Front Leg")
+            st.image(remove_image_list[2])
+            st.caption("Resize Right Leg")
+            st.image(dst2)
+            st.caption("Contour Right Leg")
+            st.image(contour_img2)
+    else : 
+        with col1:
+            st.subheader("Front Leg")
+        with col2:
+            st.subheader("Right Leg")
+        with col3:
+            st.subheader("Left Leg")
+    
+    # 정렬하여 표시 후, 삭제 
+
+
 # Estimate Calf Round
 if choose == "Estimate Calf Round":
     st.title('Estimate Calf Round')

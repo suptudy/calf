@@ -12,7 +12,7 @@
 ![photoInfo](https://user-images.githubusercontent.com/74354757/225484053-85392ad9-234b-4350-9e2b-7fee8440061a.png)
 
 ### :pushpin: 주요 기능
-:heavy_check_mark: **Board Pixel CSV File**
+:heavy_check_mark: **(CSV file) Board Pixel CSV File**
 
 - 폼보드에 보이는 다리만 측정할 수 있도록 폼보드의 모서리 픽셀값이 적혀있는 엑셀 파일이 필요합니다.
 - sample csv file 를 통해 예시를 확인할 수 있습니다.
@@ -32,6 +32,19 @@
     |790     |1490    |810      |2731     |2360    |1414    |2400     |2696     |
     |938     |1504    |973      |2749     |2531    |1393    |2626     |2729     |
     |1137    |1489    |1145     |2715     |2719    |1379    |2777     |2697     |
+
+:heavy_check_mark: **(exe file) Board Pixel CSV File**
+- 
+실행파일 주의사항 및 사용법
+
+1. 이미지는 400*500 보다 큰 것 사용
+2. 간단한 파일명 사용 ex) 001_f.jpg
+3. 윈도우 버전 리눅스 버전 각각 맞게 사용
+
+
+1. 이미지 하나씩 넣어서 점찍고 리사이징 진행
+2. 이미지불러와서 점찍을때 시계방향(왼위 오위 오아 왼아) 순으로 진행 반드시!
+3. 이미지 저장은 기존 이미지 폴더에 resize 붙어서 저장
 
 :heavy_check_mark: **Leg Image Processing**
 ![ProcessInfo](https://user-images.githubusercontent.com/74354757/226538242-61835825-2bcd-4525-a0e5-da612d07361d.png)
