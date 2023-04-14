@@ -377,8 +377,6 @@ if choose == "(exe file) Leg Image Processing":
             st.image(real_image_list[0])
             st.caption("Remove Background Front Leg")
             st.image(remove_image_list[0])
-            st.caption("Resize Front Leg")
-            st.image(dst0)
             st.caption("Contour Front Leg")
             st.image(contour_img0)
                     
@@ -388,8 +386,6 @@ if choose == "(exe file) Leg Image Processing":
             st.image(real_image_list[1])
             st.caption("Remove Background Front Leg")
             st.image(remove_image_list[1])
-            st.caption("Resize Right Leg")
-            st.image(dst1)
             st.caption("Contour Right Leg")
             st.image(contour_img1)
             
@@ -399,8 +395,6 @@ if choose == "(exe file) Leg Image Processing":
             st.image(real_image_list[2])
             st.caption("Remove Background Front Leg")
             st.image(remove_image_list[2])
-            st.caption("Resize Right Leg")
-            st.image(dst2)
             st.caption("Contour Right Leg")
             st.image(contour_img2)
     else : 
